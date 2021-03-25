@@ -1,4 +1,3 @@
-import { password, database, user, host } from "./secret";
 const Pool = require("pg").Pool;
 const pool = new Pool({
   user: user,
