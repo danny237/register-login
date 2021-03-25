@@ -27,3 +27,4 @@ chrome-user-data
 secret.js
 database.sql
 dbtest.js
+.env
