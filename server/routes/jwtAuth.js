@@ -34,7 +34,37 @@ router.post("/register", async (req, res) => {
     res.json({ token });
   } catch (error) {
     console.log(error.message);
-    res.status(500).send("server Error");
+    res.status(500).send("server Error !");
+  }
+});
+
+//login routes
+router.post("/login", async (req, res) => {
+  try {
+    //1. destructure the req.body
+    const { email, password } = req.body;
+    //2. check if user doesn't exist throw error
+    const user = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+      email,
+    ]);
+    if (user.rows.length === 0) {
+      return res.status(401).send("Cannot login with given credentials !");
+    }
+    //3. check if the incoming password is the same as the database password
+    const validPassword = await bcrypt.compare(
+      password,
+      user.rows[0].user_password
+    );
+    if (!validPassword) {
+      return res.status(401).send("Incorrect Password or Email !");
+    }
+
+    //4. gice them the jwt token
+    const token = jwtGenerator(user.rows[0].user_id);
+    res.json({ token });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error !");
   }
 });
 
