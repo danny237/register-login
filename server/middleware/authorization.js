@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-require("detenv").config();
+require("dotenv").config();
 
 module.exports = async (req, res, next) => {
   try {
@@ -10,6 +10,7 @@ module.exports = async (req, res, next) => {
 
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     req.user = payload.user;
+    next();
   } catch (error) {
     console.log(error.message);
     return res.status(403).send("Not Authorize !");
